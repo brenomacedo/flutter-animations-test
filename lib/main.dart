@@ -36,7 +36,8 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
       duration: Duration(seconds: 2)
     );
 
-    animation = Tween<double>(begin: 0, end: 300).animate(controller);
+    animation = CurvedAnimation(parent: controller, curve: Curves.easeIn);
+    // animation = Tween<double>(begin: 0, end: 300).animate(controller);
 
     animation.addStatusListener((status) {
       if(status == AnimationStatus.completed) {
@@ -58,7 +59,7 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return GrowTransition(
+    return BrenoTransition(
       child: LogoWidget(),
       animation: animation
     );
@@ -93,12 +94,15 @@ class LogoWidget extends StatelessWidget {
   }
 }
 
-class GrowTransition extends StatelessWidget {
+class BrenoTransition extends StatelessWidget {
 
   final Widget child;
   final Animation<double> animation;
 
-  GrowTransition({this.child, this.animation});
+  final sizeTween = Tween<double>(begin: 0, end: 300);
+  final opacityTween = Tween<double>(begin: 0.1, end: 1);
+
+  BrenoTransition({this.child, this.animation});
 
   @override
   Widget build(BuildContext context) {
@@ -106,10 +110,13 @@ class GrowTransition extends StatelessWidget {
       child: AnimatedBuilder(
         animation: animation,
         builder: (context, child) {
-          return Container(
-            height: animation.value,
-            width: animation.value,
-            child: child
+          return Opacity(
+            child: Container(
+              height: sizeTween.evaluate(animation),
+              width: sizeTween.evaluate(animation),
+              child: child
+            ),
+            opacity: opacityTween.evaluate(animation).clamp(0.0, 1.0),
           );
         },
         child: child,
