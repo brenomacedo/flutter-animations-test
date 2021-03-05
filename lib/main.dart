@@ -8,6 +8,7 @@ class MyApp extends StatelessWidget {
 
   final int name = 5;
 
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Animações',
